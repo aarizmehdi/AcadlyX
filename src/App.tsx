@@ -288,215 +288,79 @@ export default function App({ user }: { user: any }) {
 
   // Central Router Client-Side AI API Call proxy with direct client-side fallback
   const executeAICall = async (endpointType: 'plan-assignment' | 'chat' | 'parse-syllabus', payload: any) => {
-    // If provider is 'built-in', use our backend API
-    if (aiConfig.provider === 'built-in') {
-      const res = await fetch(`/api/ai/${endpointType}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Server error' }));
-        throw new Error(err.error || `Server returned error status ${res.status}`);
-      }
-      return await res.json();
-    }
-
-    // Direct client-side AI Integration Fallback (for exports / custom AI keys)
-    const apiKey = aiConfig.apiKey;
+    // We enforce OpenRouter in the frontend to make this a 100% static React app
+    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || aiConfig.apiKey;
     if (!apiKey) {
-      throw new Error("Custom API Key is missing. Please configure it in Settings (top right).");
+      throw new Error("VITE_OPENROUTER_API_KEY is not defined in your environment variables. Please add it to your Vercel Settings.");
     }
 
-    if (aiConfig.provider === 'custom-gemini') {
-      const model = aiConfig.model || 'gemini-2.5-flash';
-      const baseUrl = (aiConfig.endpoint || 'https://generativelanguage.googleapis.com').replace(/\/$/, "");
-      
-      let systemInstruction = "";
-      let userContents: any[] = [];
-      let mimeType = "text/plain";
-      let schema: any = undefined;
+    const model = 'google/gemini-2.5-pro';
+    const baseUrl = 'https://openrouter.ai/api/v1';
+    
+    let systemPrompt = "";
+    let userPrompt = "";
+    let jsonMode = false;
 
-      if (endpointType === 'parse-syllabus') {
-        systemInstruction = "You are a precise academic parser. Extract structured courses and assignments in JSON format. For course colors, choose high-contrast hex codes.";
-        mimeType = "application/json";
-        userContents = [{
-          role: "user",
-          parts: [{ text: `Parse the syllabus text below and extract courses and assignments with descriptions and dates in YYYY-MM-DD format. Assume the current year is 2026.
-Text:
-${payload.text}` }]
-        }];
-        schema = {
-          type: "OBJECT",
-          properties: {
-            courses: {
-              type: "ARRAY",
-              items: {
-                type: "OBJECT",
-                properties: {
-                  name: { type: "STRING" },
-                  code: { type: "STRING" },
-                  color: { type: "STRING" }
-                },
-                required: ["name", "code", "color"]
-              }
-            },
-            assignments: {
-              type: "ARRAY",
-              items: {
-                type: "OBJECT",
-                properties: {
-                  title: { type: "STRING" },
-                  description: { type: "STRING" },
-                  dueDate: { type: "STRING" },
-                  courseCode: { type: "STRING" },
-                  difficulty: { type: "STRING" }
-                },
-                required: ["title", "description", "dueDate", "courseCode", "difficulty"]
-              }
-            }
-          },
-          required: ["courses", "assignments"]
-        };
-      } else if (endpointType === 'plan-assignment') {
-        const today = new Date().toISOString().split('T')[0];
-        systemInstruction = "You are an expert academic tutor. Create 3 to 5 milestone steps for the assignment. Timelines must be realistic and in YYYY-MM-DD.";
-        mimeType = "application/json";
-        userContents = [{
-          role: "user",
-          parts: [{ text: `Break down assignment "${payload.assignmentTitle}" (${payload.courseName}), due on ${payload.dueDate}. Today is ${today}. Details: ${payload.description || "None"}.` }]
-        }];
-        schema = {
-          type: "OBJECT",
-          properties: {
-            steps: {
-              type: "ARRAY",
-              items: {
-                type: "OBJECT",
-                properties: {
-                  title: { type: "STRING" },
-                  dueDate: { type: "STRING" },
-                  isCompleted: { type: "BOOLEAN" }
-                },
-                required: ["title", "dueDate", "isCompleted"]
-              }
-            }
-          },
-          required: ["steps"]
-        };
-      } else if (endpointType === 'chat') {
-        const coursesContext = payload.courses && payload.courses.length > 0 
-          ? payload.courses.map((c: any) => `- ${c.name} (${c.code})`).join("\n")
-          : "None added yet.";
-        const assignmentsContext = payload.assignments && payload.assignments.length > 0
-          ? payload.assignments.map((a: any) => `- ${a.title} due on ${a.dueDate}`).join("\n")
-          : "None added yet.";
+    if (endpointType === 'parse-syllabus') {
+      systemPrompt = "You are a precise academic parser. Extract structured courses and assignments in valid JSON. Return schema: { courses: [{name, code, color}], assignments: [{title, description, dueDate (YYYY-MM-DD), courseCode, difficulty ('easy'|'medium'|'hard')}] }";
+      userPrompt = payload.text;
+      jsonMode = true;
+    } else if (endpointType === 'plan-assignment') {
+      const today = new Date().toISOString().split('T')[0];
+      systemPrompt = "You are a study tutor. Return JSON: { steps: [{title, dueDate (YYYY-MM-DD), isCompleted: false}] }";
+      userPrompt = `Break down assignment "${payload.assignmentTitle}" due ${payload.dueDate}. Today is ${today}.`;
+      jsonMode = true;
+    } else if (endpointType === 'chat') {
+      const coursesContext = payload.courses && payload.courses.length > 0 
+        ? payload.courses.map((c: any) => `- ${c.name} (${c.code})`).join("\n")
+        : "None.";
+      const assignmentsContext = payload.assignments && payload.assignments.length > 0
+        ? payload.assignments.map((a: any) => `- ${a.title}`).join("\n")
+        : "None.";
 
-        systemInstruction = `You are Study Assistant, a brilliant, supportive academic companion. Current courses:\n${coursesContext}\nUpcoming:\n${assignmentsContext}`;
-        userContents = payload.messages.map((m: any) => ({
-          role: m.role === 'model' ? 'model' : 'user',
-          parts: [{ text: m.text }]
-        }));
-      }
-
-      const url = `${baseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: userContents,
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          generationConfig: {
-            responseMimeType: mimeType,
-            responseSchema: schema,
-            temperature: 0.7
-          }
-        })
-      });
-
-      if (!res.ok) {
-        const errorJson = await res.json().catch(() => ({}));
-        throw new Error(errorJson.error?.message || `Gemini API returned status ${res.status}`);
-      }
-
-      const resJson = await res.json();
-      const textResponse = resJson.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
-
-      if (endpointType === 'chat') {
-        return { text: textResponse };
-      } else {
-        return JSON.parse(textResponse);
-      }
-
-    } else if (aiConfig.provider === 'custom-openai') {
-      const model = aiConfig.model || 'gpt-4o-mini';
-      const baseUrl = (aiConfig.endpoint || 'https://api.openai.com').replace(/\/$/, "");
-      
-      let systemPrompt = "";
-      let userPrompt = "";
-      let jsonMode = false;
-
-      if (endpointType === 'parse-syllabus') {
-        systemPrompt = "You are a precise academic parser. Extract structured courses and assignments in valid JSON. Return schema: { courses: [{name, code, color}], assignments: [{title, description, dueDate (YYYY-MM-DD), courseCode, difficulty ('easy'|'medium'|'hard')}] }";
-        userPrompt = payload.text;
-        jsonMode = true;
-      } else if (endpointType === 'plan-assignment') {
-        const today = new Date().toISOString().split('T')[0];
-        systemPrompt = "You are a study tutor. Return JSON: { steps: [{title, dueDate (YYYY-MM-DD), isCompleted: false}] }";
-        userPrompt = `Break down assignment "${payload.assignmentTitle}" due ${payload.dueDate}. Today is ${today}.`;
-        jsonMode = true;
-      } else if (endpointType === 'chat') {
-        const coursesContext = payload.courses && payload.courses.length > 0 
-          ? payload.courses.map((c: any) => `- ${c.name} (${c.code})`).join("\n")
-          : "None.";
-        const assignmentsContext = payload.assignments && payload.assignments.length > 0
-          ? payload.assignments.map((a: any) => `- ${a.title}`).join("\n")
-          : "None.";
-
-        systemPrompt = `You are Study Assistant, an academic helper. Courses:\n${coursesContext}\nAssignments:\n${assignmentsContext}`;
-        userPrompt = payload.messages[payload.messages.length - 1].text;
-      }
-
-      const messages = [{ role: 'system', content: systemPrompt }];
-      if (endpointType === 'chat') {
-        payload.messages.forEach((m: any) => {
-          messages.push({ role: m.role === 'model' ? 'assistant' : 'user', content: m.text });
-        });
-      } else {
-        messages.push({ role: 'user', content: userPrompt });
-      }
-
-      const url = `${baseUrl}/v1/chat/completions`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          response_format: jsonMode ? { type: "json_object" } : undefined,
-          temperature: 0.7
-        })
-      });
-
-      if (!res.ok) {
-        const errorJson = await res.json().catch(() => ({}));
-        throw new Error(errorJson.error?.message || `OpenAI-compatible API status ${res.status}`);
-      }
-
-      const resJson = await res.json();
-      const textResponse = resJson.choices?.[0]?.message?.content || "{}";
-
-      if (endpointType === 'chat') {
-        return { text: textResponse };
-      } else {
-        return JSON.parse(textResponse);
-      }
+      systemPrompt = `You are Study Assistant, an academic helper. Courses:\n${coursesContext}\nAssignments:\n${assignmentsContext}`;
+      userPrompt = payload.messages[payload.messages.length - 1].text;
     }
 
-    throw new Error("Unsupported AI configuration");
+    const messages = [{ role: 'system', content: systemPrompt }];
+    if (endpointType === 'chat') {
+      payload.messages.forEach((m: any) => {
+        messages.push({ role: m.role === 'model' ? 'assistant' : 'user', content: String(m.text) });
+      });
+    } else {
+      messages.push({ role: 'user', content: userPrompt });
+    }
+
+    const url = `${baseUrl}/chat/completions`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": window.location.origin,
+        "X-Title": "AcadlyX"
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        response_format: jsonMode ? { type: "json_object" } : undefined,
+        temperature: 0.7
+      })
+    });
+
+    if (!res.ok) {
+      const errorJson = await res.json().catch(() => ({}));
+      throw new Error(errorJson.error?.message || `OpenRouter API status ${res.status}`);
+    }
+
+    const resJson = await res.json();
+    const textResponse = resJson.choices?.[0]?.message?.content || "{}";
+
+    if (endpointType === 'chat') {
+      return { text: textResponse };
+    } else {
+      return JSON.parse(textResponse);
+    }
   };
 
   // Calculated variables
