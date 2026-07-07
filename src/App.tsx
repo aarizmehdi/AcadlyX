@@ -1673,19 +1673,26 @@ export default function App({ user }: { user: any }) {
             >
               <div className={`w-full max-w-xl p-8 rounded-3xl flex flex-col items-center text-center relative overflow-hidden ${isDark ? 'glass-card' : 'glass-card-light'}`}>
                 
-                {/* Mode indicators */}
-                <div className={`flex items-center gap-2 mb-6 p-1 rounded-full border ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100 border-slate-200'}`}>
-                  <span className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${timerMode === 'work' ? 'bg-rose-500/10 text-rose-500' : 'text-slate-400'}`}>
-                    Focus Flow
-                  </span>
-                  <span className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${timerMode === 'break' ? 'bg-emerald-500/10 text-emerald-500' : 'text-slate-400'}`}>
-                    Zen Rest
-                  </span>
-                </div>
-
-                {/* Clock display */}
-                <div className="font-mono text-6xl md:text-7xl font-bold tracking-tight select-none my-6">
-                  {String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}
+                {/* Clock display (Editable when paused) */}
+                <div className="text-7xl md:text-8xl font-bold tracking-tighter tabular-nums select-none my-8 flex items-center justify-center">
+                  {!timerActive ? (
+                    <div className="flex items-center">
+                      <input 
+                        type="number" 
+                        min="1"
+                        max="120"
+                        value={timerMinutes} 
+                        onChange={(e) => setTimerMinutes(Number(e.target.value))}
+                        className={`w-28 md:w-36 bg-transparent text-right focus:outline-none ${isDark ? 'text-white' : 'text-slate-800'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                      />
+                      <span className="pb-1 md:pb-2 mx-1">:</span>
+                      <span className="w-28 md:w-36 text-left">{String(timerSeconds).padStart(2, '0')}</span>
+                    </div>
+                  ) : (
+                    <span>
+                      {String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}
+                    </span>
+                  )}
                 </div>
 
                 <div className="w-full max-w-sm space-y-4 mb-8">
