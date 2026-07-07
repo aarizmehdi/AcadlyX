@@ -289,7 +289,7 @@ export default function App({ user }: { user: any }) {
   // Central Router Client-Side AI API Call proxy with direct client-side fallback
   const executeAICall = async (endpointType: 'plan-assignment' | 'chat' | 'parse-syllabus', payload: any) => {
     // We enforce OpenRouter in the frontend to make this a 100% static React app
-    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || aiConfig.apiKey;
+    const apiKey = (import.meta as any).env.VITE_OPENROUTER_API_KEY || aiConfig.apiKey;
     if (!apiKey) {
       throw new Error("VITE_OPENROUTER_API_KEY is not defined in your environment variables. Please add it to your Vercel Settings.");
     }
