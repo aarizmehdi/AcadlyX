@@ -6,6 +6,14 @@ import App from './App.tsx';
 import Login from './components/Login.tsx';
 import './index.css';
 
+// Initialize theme before React renders to prevent flash and ensure Login page gets correct styling
+const savedTheme = localStorage.getItem('acadly_theme') || 'dark';
+if (savedTheme === 'dark') {
+  document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
+}
+
 function Root() {
   const { user, loading } = useAuthState();
 
