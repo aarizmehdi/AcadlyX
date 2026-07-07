@@ -15,7 +15,7 @@ export default function AcadlyLogo({ className = 'w-10 h-10', iconOnly = false }
 
       {!iconOnly && (
         <div className="flex flex-col">
-          <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-900 dark:from-white dark:via-indigo-100 dark:to-indigo-300 bg-clip-text text-transparent">
+          <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Acadly
           </span>
           <span className="text-[9px] font-mono tracking-widest uppercase text-indigo-600 dark:text-indigo-400 font-extrabold">
