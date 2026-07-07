@@ -685,9 +685,22 @@ export default function App({ user }: { user: any }) {
                     placeholder="e.g. Computer Science"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Target GPA</label>
+                  <input 
+                    type="number" 
+                    step="0.01"
+                    min="0"
+                    max="10"
+                    value={stats.gpaGoal || ''} 
+                    onChange={e => setStats({ ...stats, gpaGoal: parseFloat(e.target.value) || 0 })}
+                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-500' : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'}`}
+                    placeholder="e.g. 4.0"
+                  />
+                </div>
                 <button
                   onClick={() => setShowOnboarding(false)}
-                  disabled={!userName.trim() || !major.trim()}
+                  disabled={!userName.trim() || !major.trim() || !stats.gpaGoal}
                   className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold shadow-lg shadow-indigo-600/20 transition-all"
                 >
                   Get Started
@@ -877,6 +890,8 @@ export default function App({ user }: { user: any }) {
         setUserName={setUserName}
         major={major}
         setMajor={setMajor}
+        stats={stats}
+        setStats={setStats}
       />
 
       {/* Main Content Area */}
