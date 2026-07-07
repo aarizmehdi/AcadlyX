@@ -897,73 +897,6 @@ export default function App({ user }: { user: any }) {
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-6 flex flex-col gap-6">
         
-        {/* Personalized Welcome Banner */}
-        <section className={`p-6 rounded-3xl relative overflow-hidden border flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r ${isDark ? 'from-indigo-950/20 via-purple-950/10 to-transparent border-indigo-500/15' : 'from-indigo-50/50 via-purple-50/30 to-transparent border-slate-200/80'}`}>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
-          <div>
-            <h1 className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>
-              Welcome back, <span className="bg-gradient-to-r from-indigo-600 to-indigo-400 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent font-extrabold">{userName}</span>! 🎓
-            </h1>
-            <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-slate-600'}`}>
-              <span className="font-semibold text-indigo-600 dark:text-indigo-400">{major || 'Academic Scholar'} Focus</span> • Your current GPA is <span className="font-bold text-indigo-500">{stats.currentGpa}</span> (Target: {stats.gpaGoal}). Keep up the momentum!
-            </p>
-          </div>
-          <div className={`flex items-center gap-2 self-start md:self-auto text-xs font-mono px-3.5 py-1.5 rounded-xl border ${isDark ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-300' : 'bg-indigo-50 border-indigo-100 text-indigo-600'}`}>
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            Active Study Mode
-          </div>
-        </section>
-
-        {/* Dynamic Overview Stats banner (Top row) - responsive layout */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
-            <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>Assignments Left</span>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl font-bold">{upcomingAssignments.length}</span>
-              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>pending tasks</span>
-            </div>
-            <div className="w-full bg-slate-200/50 dark:bg-white/5 h-1.5 rounded-full mt-3 overflow-hidden">
-              <div 
-                className="bg-indigo-500 h-full transition-all duration-500" 
-                style={{ width: `${assignments.length > 0 ? (upcomingAssignments.length / assignments.length) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
-
-          <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
-            <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>Hours Studied</span>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl font-bold text-emerald-500 dark:text-emerald-400">{stats.totalHoursStudied}</span>
-              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>hours logged</span>
-            </div>
-            <div className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-3">
-              <TrendingUp className="w-3.5 h-3.5" /> High-focus flow active
-            </div>
-          </div>
-
-          <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
-            <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>GPA Status</span>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.currentGpa}</span>
-              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>Current GPA</span>
-            </div>
-            <div className={`text-[11px] mt-3 ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
-              Target goal: <span className="text-purple-600 dark:text-purple-400 font-bold">{stats.gpaGoal}</span>
-            </div>
-          </div>
-
-          <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
-            <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>Completed Tasks</span>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl font-bold text-pink-500 dark:text-pink-400">{stats.assignmentsCompleted}</span>
-              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>milestones done</span>
-            </div>
-            <div className="text-[11px] text-pink-600 dark:text-pink-400 flex items-center gap-1 mt-3">
-              <Check className="w-3.5 h-3.5" /> Keep up the progress!
-            </div>
-          </div>
-        </section>
-
         {/* Tab content area */}
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
@@ -973,8 +906,76 @@ export default function App({ user }: { user: any }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+              className="space-y-6"
             >
+              {/* Personalized Welcome Banner */}
+              <section className={`p-6 rounded-3xl relative overflow-hidden border flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r ${isDark ? 'from-indigo-950/20 via-purple-950/10 to-transparent border-indigo-500/15' : 'from-indigo-50/50 via-purple-50/30 to-transparent border-slate-200/80'}`}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
+                <div>
+                  <h1 className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                    Welcome back, <span className="bg-gradient-to-r from-indigo-600 to-indigo-400 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent font-extrabold">{userName}</span>! 🎓
+                  </h1>
+                  <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-slate-600'}`}>
+                    <span className="font-semibold text-indigo-600 dark:text-indigo-400">{major || 'Academic Scholar'} Focus</span> • Your current GPA is <span className="font-bold text-indigo-500">{stats.currentGpa}</span> (Target: {stats.gpaGoal}). Keep up the momentum!
+                  </p>
+                </div>
+                <div className={`flex items-center gap-2 self-start md:self-auto text-xs font-mono px-3.5 py-1.5 rounded-xl border ${isDark ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-300' : 'bg-indigo-50 border-indigo-100 text-indigo-600'}`}>
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                  Active Study Mode
+                </div>
+              </section>
+
+              {/* Dynamic Overview Stats banner (Top row) - responsive layout */}
+              <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
+                  <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>Assignments Left</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-3xl font-bold">{upcomingAssignments.length}</span>
+                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>pending tasks</span>
+                  </div>
+                  <div className="w-full bg-slate-200/50 dark:bg-white/5 h-1.5 rounded-full mt-3 overflow-hidden">
+                    <div 
+                      className="bg-indigo-500 h-full transition-all duration-500" 
+                      style={{ width: `${assignments.length > 0 ? (upcomingAssignments.length / assignments.length) * 100 : 0}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
+                  <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>Hours Studied</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-3xl font-bold text-emerald-500 dark:text-emerald-400">{stats.totalHoursStudied}</span>
+                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>hours logged</span>
+                  </div>
+                  <div className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-3">
+                    <TrendingUp className="w-3.5 h-3.5" /> High-focus flow active
+                  </div>
+                </div>
+
+                <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
+                  <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>GPA Status</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.currentGpa}</span>
+                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>Current GPA</span>
+                  </div>
+                  <div className={`text-[11px] mt-3 ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
+                    Target goal: <span className="text-purple-600 dark:text-purple-400 font-bold">{stats.gpaGoal}</span>
+                  </div>
+                </div>
+
+                <div className={`p-4 rounded-2xl flex flex-col justify-between ${isDark ? 'glass-card' : 'glass-card-light'}`}>
+                  <span className={`text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-400'}`}>Completed Tasks</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-3xl font-bold text-pink-500 dark:text-pink-400">{stats.assignmentsCompleted}</span>
+                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>milestones done</span>
+                  </div>
+                  <div className="text-[11px] text-pink-600 dark:text-pink-400 flex items-center gap-1 mt-3">
+                    <Check className="w-3.5 h-3.5" /> Keep up the progress!
+                  </div>
+                </div>
+              </section>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left 2 Columns: Bento list of Upcoming Deadlines & Calendar Timeline */}
               <div className="lg:col-span-2 flex flex-col gap-6">
                 
@@ -1317,7 +1318,8 @@ export default function App({ user }: { user: any }) {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
+          </motion.div>
           )}
 
           {/* Planner view */}
