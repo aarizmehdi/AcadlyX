@@ -725,7 +725,7 @@ export default function App({ user }: { user: any }) {
                 ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 dark:border-indigo-900 shadow-[0_4px_12px_rgba(99,102,241,0.3)] translate-y-[-1.5px] active:translate-y-[1px] active:border-b-0' 
                 : isDark 
                   ? 'text-gray-400 hover:text-white hover:bg-white/5 hover:translate-y-[-1px] active:translate-y-[0.5px]' 
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
+                  : 'text-slate-800 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
             }`}
           >
             Dashboard
@@ -737,7 +737,7 @@ export default function App({ user }: { user: any }) {
                 ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 dark:border-indigo-900 shadow-[0_4px_12px_rgba(99,102,241,0.3)] translate-y-[-1.5px] active:translate-y-[1px] active:border-b-0' 
                 : isDark 
                   ? 'text-gray-400 hover:text-white hover:bg-white/5 hover:translate-y-[-1px] active:translate-y-[0.5px]' 
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
+                  : 'text-slate-800 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
             }`}
           >
             Planner
@@ -749,7 +749,7 @@ export default function App({ user }: { user: any }) {
                 ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 dark:border-indigo-900 shadow-[0_4px_12px_rgba(99,102,241,0.3)] translate-y-[-1.5px] active:translate-y-[1px] active:border-b-0' 
                 : isDark 
                   ? 'text-gray-400 hover:text-white hover:bg-white/5 hover:translate-y-[-1px] active:translate-y-[0.5px]' 
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
+                  : 'text-slate-800 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" /> Study Assistant
@@ -761,7 +761,7 @@ export default function App({ user }: { user: any }) {
                 ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 dark:border-indigo-900 shadow-[0_4px_12px_rgba(99,102,241,0.3)] translate-y-[-1.5px] active:translate-y-[1px] active:border-b-0' 
                 : isDark 
                   ? 'text-gray-400 hover:text-white hover:bg-white/5 hover:translate-y-[-1px] active:translate-y-[0.5px]' 
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
+                  : 'text-slate-800 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
             }`}
           >
             AI Syllabus Parser
@@ -773,7 +773,7 @@ export default function App({ user }: { user: any }) {
                 ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 dark:border-indigo-900 shadow-[0_4px_12px_rgba(99,102,241,0.3)] translate-y-[-1.5px] active:translate-y-[1px] active:border-b-0' 
                 : isDark 
                   ? 'text-gray-400 hover:text-white hover:bg-white/5 hover:translate-y-[-1px] active:translate-y-[0.5px]' 
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
+                  : 'text-slate-800 hover:text-slate-900 hover:bg-white/80 hover:translate-y-[-1px] active:translate-y-[0.5px]'
             }`}
           >
             <Timer className="w-3.5 h-3.5" /> Study Timer
@@ -818,7 +818,7 @@ export default function App({ user }: { user: any }) {
           className={`flex-1 min-w-[80px] py-2 px-3 rounded-xl text-center text-xs font-bold transition-all duration-150 ${
             activeTab === 'dashboard' 
               ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 shadow-[0_3px_8px_rgba(99,102,241,0.25)] translate-y-[-1px] active:translate-y-[1px] active:border-b-0 font-extrabold' 
-              : 'text-gray-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-800 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           Overview
@@ -828,7 +828,7 @@ export default function App({ user }: { user: any }) {
           className={`flex-1 min-w-[80px] py-2 px-3 rounded-xl text-center text-xs font-bold transition-all duration-150 ${
             activeTab === 'planner' 
               ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 shadow-[0_3px_8px_rgba(99,102,241,0.25)] translate-y-[-1px] active:translate-y-[1px] active:border-b-0 font-extrabold' 
-              : 'text-gray-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-800 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           Planner
@@ -838,7 +838,7 @@ export default function App({ user }: { user: any }) {
           className={`flex-1 min-w-[110px] py-2 px-3 rounded-xl text-center text-xs font-bold transition-all duration-150 ${
             activeTab === 'tutor' 
               ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 shadow-[0_3px_8px_rgba(99,102,241,0.25)] translate-y-[-1px] active:translate-y-[1px] active:border-b-0 font-extrabold' 
-              : 'text-gray-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-800 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           Study Assistant
@@ -848,7 +848,7 @@ export default function App({ user }: { user: any }) {
           className={`flex-1 min-w-[80px] py-2 px-3 rounded-xl text-center text-xs font-bold transition-all duration-150 ${
             activeTab === 'parser' 
               ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 shadow-[0_3px_8px_rgba(99,102,241,0.25)] translate-y-[-1px] active:translate-y-[1px] active:border-b-0 font-extrabold' 
-              : 'text-gray-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-800 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           Parser
@@ -858,7 +858,7 @@ export default function App({ user }: { user: any }) {
           className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-center text-xs font-bold transition-all duration-150 ${
             activeTab === 'timer' 
               ? 'bg-indigo-600 text-white border-b-[3px] border-indigo-800 shadow-[0_3px_8px_rgba(99,102,241,0.25)] translate-y-[-1px] active:translate-y-[1px] active:border-b-0 font-extrabold' 
-              : 'text-gray-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
+              : 'text-slate-800 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           Study Timer
@@ -1765,8 +1765,8 @@ export default function App({ user }: { user: any }) {
                     key={m.id}
                     className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[85%] rounded-2xl p-4 text-sm ${m.role === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-gray-250 border border-slate-200/50 dark:border-white/5 rounded-bl-none'}`}>
-                      <p className="whitespace-pre-line leading-relaxed">{m.text}</p>
+                    <div className={`max-w-[85%] rounded-2xl p-4 text-sm ${m.role === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-100 dark:bg-[#1a1c23] text-slate-800 dark:text-gray-200 border border-slate-200/50 dark:border-white/10 rounded-bl-none'}`}>
+                      <p className="whitespace-pre-line leading-relaxed" dangerouslySetInnerHTML={{ __html: m.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}></p>
                       <span className="block text-[9px] text-gray-400 font-mono mt-2 text-right">
                         {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
